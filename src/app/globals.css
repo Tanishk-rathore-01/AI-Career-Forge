@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 203 45% 8%;
+  --foreground: 180 25% 94%;
+  --card: 200 38% 11%;
+  --card-foreground: 180 25% 94%;
+  --muted: 198 24% 18%;
+  --muted-foreground: 180 10% 68%;
+  --border: 190 22% 22%;
+  --primary: 174 58% 48%;
+  --primary-foreground: 196 50% 8%;
+  --accent: 42 85% 62%;
+  --accent-foreground: 205 45% 8%;
+  --destructive: 8 74% 58%;
+  --ring: 174 58% 48%;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(42, 157, 143, 0.18), transparent 32rem),
+    radial-gradient(circle at 85% 15%, rgba(233, 196, 106, 0.12), transparent 26rem),
+    hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+::selection {
+  background: rgba(42, 157, 143, 0.35);
+  color: hsl(var(--foreground));
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.panel {
+  border: 1px solid rgba(169, 220, 211, 0.14);
+  background: linear-gradient(145deg, rgba(13, 38, 50, 0.86), rgba(8, 28, 39, 0.72));
+  box-shadow: 0 24px 80px rgba(3, 12, 18, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.subtle-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
