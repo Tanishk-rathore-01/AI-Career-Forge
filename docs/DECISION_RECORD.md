@@ -4,14 +4,14 @@ This document captures recommended defaults for the first build. These decisions
 
 ## Decision 1: Audience
 
-Recommendation: start with students, freshers, and early-career professionals.
+Recommendation: start with students, interns, freshers, and experienced professionals across any field.
 
 Reasoning:
 
 - They have a stronger pain point around interview uncertainty.
 - They need guided coaching more than advanced customization.
 - The first MVP can be simpler and still useful.
-- India-focused placement and fresher preparation gives the product a sharper identity.
+- India-focused and international preparation gives the product a sharper identity while supporting global client interviews.
 
 Rejected for MVP:
 
@@ -36,7 +36,7 @@ Implementation note:
 
 ## Decision 3: Input Mode
 
-Recommendation: text-only for MVP, voice later.
+Recommendation: text-first MVP, with voice practice and confidence/filler-word detection in Phase 2.
 
 Reasoning:
 
@@ -68,18 +68,18 @@ MVP behavior:
 
 ## Decision 5: Auth Provider
 
-Recommendation: Clerk for MVP.
+Recommendation: NextAuth/Auth.js for MVP.
 
 Reasoning:
 
-- Fastest route to polished auth, protected routes, and user management.
-- Reduces implementation risk in the first build.
-- Lets engineering focus on AI workflows and product quality.
+- Fits the confirmed requirement to avoid Clerk.
+- Works well with the Next.js App Router through `auth.ts` and route handlers.
+- Supports Google OAuth plus credentials-based email/password login.
 
 Tradeoff:
 
-- NextAuth gives more control and lower vendor coupling.
-- Clerk is better for speed unless custom auth is a hard requirement.
+- Credentials auth requires careful password hashing and validation.
+- OAuth provider configuration needs environment variables.
 
 ## Decision 6: UI Model
 
@@ -164,11 +164,11 @@ MVP behavior:
 
 ## Recommended MVP Defaults
 
-- Audience: students, freshers, early-career professionals
+- Audience: students, interns, freshers, and experienced professionals
 - Geography: India-first
-- Input: text-only
+- Input: text-first, voice-ready Phase 2
 - Demo: one free limited demo before signup
-- Auth: Clerk
+- Auth: NextAuth/Auth.js
 - UI: guided coach first, dashboard second
 - Salary negotiation: included in MVP
 - Selection chance: responsible estimate only

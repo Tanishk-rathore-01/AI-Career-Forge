@@ -16,9 +16,9 @@ The MVP should prove one core loop:
 
 Primary persona:
 
-- Student, fresher, or early-career candidate
-- 0-3 years of experience
-- Preparing for internships, entry-level jobs, or first job switch
+- Student, intern, fresher, or experienced professional
+- Any experience level and any field
+- Preparing for internships, entry-level jobs, client interviews, or job switches
 - Needs guidance on answer quality, confidence, and salary conversation
 
 Initial market assumption:
@@ -80,8 +80,8 @@ MVP requirement:
 
 Recommended implementation:
 
-- Clerk for fastest MVP
-- NextAuth only if full auth control is preferred
+- NextAuth/Auth.js with App Router handlers
+- Google OAuth plus email/password credentials for MVP
 
 ### User Profile
 
@@ -431,10 +431,10 @@ The MVP is ready when:
 
 ## Open Decisions
 
-1. Should one free demo interview be allowed before login?
-2. Should the app require resume upload in MVP, or only ask profile questions?
-3. Should the first UI feel more like a dashboard or more like a guided coach?
-4. Should salary negotiation be free or premium later?
-5. Should the initial build use Clerk or NextAuth?
+1. One free demo interview is allowed before login.
+2. Resume matching starts with pasted resume and job description text.
+3. The UI should feel like a guided professional coach first and a dashboard second.
+4. Salary negotiation is free but limited, with premium-ready unlimited usage later.
+5. Auth uses NextAuth/Auth.js, not Clerk.
 
 

@@ -6,7 +6,7 @@ export function Card({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("panel rounded-lg", className)} {...props} />;
+  return <div className={cn("surface-raised rounded-lg", className)} {...props} />;
 }
 
 export function CardHeader({

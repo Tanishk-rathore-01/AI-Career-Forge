@@ -67,7 +67,7 @@ Add secure user identity and protected routes.
 
 ### Tasks
 
-- Integrate Clerk.
+- Integrate NextAuth/Auth.js.
 - Add sign-in and sign-up pages.
 - Protect authenticated routes.
 - Add `requireUser` helper.

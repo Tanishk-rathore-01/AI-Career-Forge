@@ -16,7 +16,7 @@ export function BrandMark({ compact = false, className }: BrandMarkProps) {
       {!compact && (
         <span className="leading-tight">
           <span className="block text-sm font-semibold text-foreground">PrepPilot</span>
-          <span className="block text-xs text-muted-foreground">AI career coach</span>
+          <span className="block text-xs text-muted-foreground">Interview intelligence</span>
         </span>
       )}
     </Link>

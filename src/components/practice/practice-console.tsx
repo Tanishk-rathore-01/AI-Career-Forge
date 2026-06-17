@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2, RotateCcw, Send } from "lucide-react";
 import Link from "next/link";
@@ -28,6 +28,17 @@ type Question = {
   evaluationFocus: string[];
 };
 
+const initialQuestion: Question = {
+  question:
+    "Tell me about yourself and why this role is the right next step for your career.",
+  intent: "Evaluate confidence, role alignment, and clarity of career direction.",
+  evaluationFocus: [
+    "Clear self-introduction",
+    "Role alignment",
+    "Specific evidence"
+  ]
+};
+
 type PracticeConsoleProps = {
   demo?: boolean;
 };
@@ -38,7 +49,7 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
   const [marketFocus, setMarketFocus] = useState("both");
   const [mode, setMode] = useState("hr");
   const [answer, setAnswer] = useState("");
-  const [question, setQuestion] = useState<Question | null>(null);
+  const [question, setQuestion] = useState<Question | null>(initialQuestion);
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
@@ -114,11 +125,6 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
       setIsEvaluating(false);
     }
   }
-
-  useEffect(() => {
-    void loadQuestion();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">

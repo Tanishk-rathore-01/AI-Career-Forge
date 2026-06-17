@@ -11,10 +11,11 @@ The product should feel like a personal AI career coach, not a generic chatbot. 
 Recommended first audience:
 
 - Students
+- Interns
 - Freshers
-- Early-career professionals with 0-3 years of experience
+- Experienced professionals from any field
 
-This audience is the best starting point because they need more guidance, onboarding can be simpler, and the app can provide clear value without needing deep company-specific interview intelligence on day one.
+This audience is the best starting point because they need practical interview confidence, salary coaching, and role-specific preparation across both India-focused and international opportunities.
 
 Future expansion:
 
@@ -85,12 +86,10 @@ The first version should focus on a complete interview preparation loop.
 
 These are valuable, but should come after the first stable version:
 
-- Voice interview practice
 - Video analysis
 - Resume builder
 - Job board integration
 - Company-specific interview intelligence
-- Payment subscriptions
 - Recruiter matching
 - Mobile app
 
@@ -240,8 +239,8 @@ The dashboard should show this in a simple, visual way.
 
 ### Auth
 
-- Clerk for fastest polished auth
-- NextAuth if we want more control and lower dependency on a third-party auth platform
+- NextAuth/Auth.js for modern App Router authentication
+- Google OAuth plus email/password credentials for MVP
 
 ### AI
 
@@ -371,16 +370,16 @@ Institution plan:
 
 - Resume parsing
 - Job description matching
-- Voice interview mode
+- Voice interview mode with confidence and filler-word detection
 - Company-specific preparation
 - Personalized learning plans
 
 ## Key Product Decisions Still Needed
 
-1. Should the first version focus only on students/freshers, or include working professionals from day one?
-2. Should MVP answers be text-only, or should voice be planned immediately?
-3. Should salary data and examples be India-focused first?
-4. Should login be required before practice, or should users get one free demo interview before signup?
-5. Should the brand name stay PrepPilot?
+1. Voice practice, confidence scoring, and filler-word detection are Phase 2.
+2. Salary negotiation is free but limited, with premium-ready unlimited coaching later.
+3. Resume and job description matching starts with pasted text, with file parsing and embeddings later.
+4. One free demo interview is allowed before signup.
+5. PrepPilot is the confirmed brand name.
 
 

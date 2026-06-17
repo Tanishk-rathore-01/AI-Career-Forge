@@ -25,21 +25,21 @@ const navItems = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-white/10 bg-background/78 p-5 backdrop-blur-xl lg:block">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-white/10 bg-slate-950/88 p-5 backdrop-blur-xl lg:block">
         <BrandMark />
-        <nav className="mt-10 space-y-2">
+        <nav className="mt-10 space-y-1.5">
           {navItems.map((item) => (
             <Link
               href={item.href}
               key={item.href}
-              className="flex items-center gap-3 rounded-md px-3 py-3 text-sm text-muted-foreground transition hover:bg-white/8 hover:text-foreground"
+              className="flex items-center gap-3 rounded-md border border-transparent px-3 py-3 text-sm font-medium text-muted-foreground transition hover:border-white/10 hover:bg-white/[0.045] hover:text-foreground"
             >
               <item.icon size={18} />
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="absolute bottom-5 left-5 right-5 rounded-lg border border-primary/20 bg-primary/10 p-4">
+        <div className="absolute bottom-5 left-5 right-5 rounded-lg border border-primary/20 bg-primary/[0.07] p-4">
           <p className="text-sm font-medium text-foreground">Premium-ready</p>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
             Unlimited interviews, deeper reports, certificates, and voice analytics
@@ -50,7 +50,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Button>
         </div>
       </aside>
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-background/82 px-4 py-3 backdrop-blur-xl lg:hidden">
+      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/86 px-4 py-3 backdrop-blur-xl lg:hidden">
         <BrandMark />
       </header>
       <main className="lg:pl-72">

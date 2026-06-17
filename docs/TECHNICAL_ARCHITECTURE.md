@@ -39,8 +39,8 @@ The MVP should be simple enough to ship quickly, while leaving clean paths for v
 
 ### Authentication
 
-- Clerk for MVP
-- Clerk user ID stored on application records as `userId`
+- NextAuth/Auth.js for MVP
+- NextAuth user ID stored on application records as `userId`
 
 ### AI
 
