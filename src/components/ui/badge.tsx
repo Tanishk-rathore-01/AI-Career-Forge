@@ -1,4 +1,6 @@
-﻿import { cn } from "@/lib/utils";
+import type React from "react";
+
+import { cn } from "@/lib/utils";
 
 type BadgeProps = {
   children: React.ReactNode;
@@ -17,4 +19,3 @@ export function Badge({ children, className }: BadgeProps) {
     </span>
   );
 }
-

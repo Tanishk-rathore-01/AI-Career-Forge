@@ -95,6 +95,11 @@ body {
   outline: none;
 }
 
+.field option {
+  background: #0f172a;
+  color: hsl(var(--foreground));
+}
+
 .section-kicker {
   color: hsl(var(--primary));
   font-size: 0.72rem;

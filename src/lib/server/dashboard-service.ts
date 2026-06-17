@@ -18,6 +18,15 @@ function scoreEntries(value: Prisma.JsonValue | null | undefined) {
     .map(([name, score]) => ({ name, score: Number(score) }));
 }
 
+function hasMetadataKind(value: Prisma.JsonValue | null | undefined, kind: string) {
+  return (
+    Boolean(value) &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    (value as { kind?: unknown }).kind === kind
+  );
+}
+
 export async function getDashboardSummary(userId: string) {
   const [profile, evaluations, resumeMatches, sessions, streak] =
     await Promise.all([
@@ -64,15 +73,16 @@ export async function getDashboardSummary(userId: string) {
 
   const readinessLevel = readinessLabel(readinessFromScore(readinessScore));
   const latestResumeMatch = resumeMatches[0];
+  const latestSalaryEvaluation = evaluations.find((item) =>
+    hasMetadataKind(item.metadata, "salary")
+  );
 
   return {
     profile,
     readinessScore,
     readinessLevel,
     averageScore: average(evaluations.map((item) => item.overallScore)),
-    salaryConfidence:
-      evaluations.find((item) => item.metadata && typeof item.metadata === "object")?.overallScore ??
-      0,
+    salaryConfidence: latestSalaryEvaluation?.overallScore ?? 0,
     resumeMatchScore: latestResumeMatch?.matchScore ?? 0,
     strongestAreas: categoryAverages.slice(-3).reverse(),
     weakestAreas: categoryAverages.slice(0, 3),

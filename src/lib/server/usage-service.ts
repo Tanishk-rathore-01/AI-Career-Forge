@@ -2,8 +2,8 @@ import { UsageEventType } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
 
-const FREE_DAILY_EVALUATION_LIMIT = 5;
-const FREE_DAILY_SALARY_LIMIT = 2;
+export const FREE_DAILY_EVALUATION_LIMIT = 5;
+export const FREE_DAILY_SALARY_LIMIT = 2;
 
 function startOfToday() {
   const now = new Date();

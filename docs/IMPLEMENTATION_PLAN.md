@@ -280,7 +280,7 @@ The first implementation commit should include:
 - Tailwind
 - basic layout
 - README setup instructions
-- placeholder home page
+- implemented PrepPilot public landing and authenticated app shell
 
 Do not include AI logic in the first commit. Establish the project foundation first.
 

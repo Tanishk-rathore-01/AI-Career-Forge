@@ -1,8 +1,8 @@
-﻿"use client";
+"use client";
 
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { FileSearch, Loader2 } from "lucide-react";
+import { CheckCircle2, FileSearch, Loader2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ type ResumeMatch = {
   missingSkills: string[];
   recommendations: string[];
   summary: string;
+  resumeMatchId?: string;
 };
 
 export function ResumeMatchWorkspace() {
@@ -41,13 +42,13 @@ export function ResumeMatchWorkspace() {
         })
       });
 
-      const payload = await response.json();
+      const payload = (await response.json()) as ResumeMatch & { error?: string };
 
       if (!response.ok) {
         throw new Error(payload.error ?? "Unable to match resume.");
       }
 
-      setMatch(payload as ResumeMatch);
+      setMatch(payload);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unable to match resume.");
     } finally {
@@ -59,8 +60,11 @@ export function ResumeMatchWorkspace() {
     <div className="grid gap-6 lg:grid-cols-[1fr_0.92fr]">
       <Card>
         <CardContent className="p-5">
-          <Badge className="mb-5">Resume + JD matching</Badge>
-          <form className="grid gap-4" onSubmit={onSubmit}>
+          <div className="flex flex-wrap gap-2">
+            <Badge>Resume + JD matching</Badge>
+            <Badge>Saved to profile</Badge>
+          </div>
+          <form className="mt-5 grid gap-4" onSubmit={onSubmit}>
             <label className="text-sm font-medium text-foreground">
               Target role
               <Input className="mt-2" name="targetRole" defaultValue="Data Analyst" required />
@@ -111,14 +115,26 @@ export function ResumeMatchWorkspace() {
             </div>
           ) : (
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="rounded-lg border border-primary/25 bg-primary/10 p-5">
-                <p className="text-sm text-muted-foreground">Match score</p>
-                <p className="mt-2 text-6xl font-semibold text-primary">{match.matchScore}%</p>
+              <div className="rounded-lg border border-primary/25 bg-primary/[0.08] p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Match score</p>
+                    <p className="mt-2 text-6xl font-semibold text-primary">
+                      {match.matchScore}%
+                    </p>
+                  </div>
+                  {match.resumeMatchId && (
+                    <Badge className="border-primary/30 text-primary">
+                      <CheckCircle2 size={14} />
+                      Saved
+                    </Badge>
+                  )}
+                </div>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">{match.summary}</p>
               </div>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                <Pills title="Matched skills" items={match.matchedSkills} />
-                <Pills title="Missing signals" items={match.missingSkills} />
+                <Pills title="Matched skills" items={match.matchedSkills} tone="primary" />
+                <Pills title="Missing signals" items={match.missingSkills} tone="accent" />
               </div>
               <div className="mt-4 rounded-lg border border-white/10 p-5">
                 <p className="font-medium text-foreground">Recommendations</p>
@@ -136,16 +152,27 @@ export function ResumeMatchWorkspace() {
   );
 }
 
-function Pills({ title, items }: { title: string; items: string[] }) {
+function Pills({
+  title,
+  items,
+  tone
+}: {
+  title: string;
+  items: string[];
+  tone: "primary" | "accent";
+}) {
+  const badgeClass = tone === "primary" ? "border-primary/30 text-primary" : "border-accent/30 text-accent";
+
   return (
     <div className="rounded-lg border border-white/10 p-4">
       <p className="text-sm font-medium text-foreground">{title}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {(items.length ? items : ["No strong signal yet"]).map((item) => (
-          <Badge key={item}>{item}</Badge>
+          <Badge className={badgeClass} key={item}>
+            {item}
+          </Badge>
         ))}
       </div>
     </div>
   );
 }
-

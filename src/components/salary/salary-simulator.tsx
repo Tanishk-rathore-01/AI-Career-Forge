@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
+import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Send } from "lucide-react";
+import { ArrowRight, Loader2, Send } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,8 @@ type SalaryEvaluation = {
   weaknesses: string[];
   improvedResponse: string;
   nextRecruiterMessage: string;
+  sessionId?: string;
+  savedEvaluationId?: string;
 };
 
 const starterPrompt =
@@ -24,6 +27,7 @@ const starterPrompt =
 
 export function SalarySimulator() {
   const [evaluation, setEvaluation] = useState<SalaryEvaluation | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,13 +54,14 @@ export function SalarySimulator() {
         })
       });
 
-      const payload = await response.json();
+      const payload = (await response.json()) as SalaryEvaluation & { error?: string };
 
       if (!response.ok) {
         throw new Error(payload.error ?? "Unable to score negotiation.");
       }
 
-      setEvaluation(payload as SalaryEvaluation);
+      setEvaluation(payload);
+      setSessionId(payload.sessionId ?? null);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unable to score negotiation.");
     } finally {
@@ -68,18 +73,29 @@ export function SalarySimulator() {
     <div className="grid gap-6 lg:grid-cols-[0.88fr_1.12fr]">
       <Card>
         <CardContent className="p-5">
-          <Badge className="mb-5">Free limited simulator</Badge>
-          <h2 className="text-2xl font-semibold text-foreground">
+          <div className="flex flex-wrap gap-2">
+            <Badge>Free limited simulator</Badge>
+            <Badge>Premium-ready depth</Badge>
+          </div>
+          <h2 className="mt-5 text-2xl font-semibold text-foreground">
             Practice respectful salary confidence.
           </h2>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
             PrepPilot coaches firm, professional negotiation. Premium can later
             unlock deeper market benchmarking and unlimited practice.
           </p>
-          <div className="mt-6 rounded-lg border border-accent/25 bg-accent/10 p-4">
+          <div className="mt-6 rounded-lg border border-accent/25 bg-accent/[0.08] p-4">
             <p className="text-sm font-medium text-foreground">Recruiter asks</p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">{starterPrompt}</p>
           </div>
+          {sessionId && (
+            <Button asChild className="mt-5 w-full" variant="secondary">
+              <Link href={`/sessions/${sessionId}`}>
+                View saved negotiation
+                <ArrowRight size={16} />
+              </Link>
+            </Button>
+          )}
         </CardContent>
       </Card>
 
@@ -97,10 +113,7 @@ export function SalarySimulator() {
               </label>
               <label className="text-sm font-medium text-foreground">
                 Market focus
-                <select
-                  className="mt-2 h-11 w-full rounded-md border border-white/12 bg-white/8 px-3 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  name="marketFocus"
-                >
+                <select className="field mt-2 px-3 text-sm" name="marketFocus">
                   <option value="both">India + International</option>
                   <option value="india">India</option>
                   <option value="international">International</option>
@@ -143,7 +156,7 @@ export function SalarySimulator() {
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 rounded-lg border border-primary/25 bg-primary/10 p-5"
+              className="mt-6 rounded-lg border border-primary/25 bg-primary/[0.08] p-5"
             >
               <div className="flex items-end justify-between gap-4">
                 <div>
@@ -158,10 +171,26 @@ export function SalarySimulator() {
                 <List title="Strengths" items={evaluation.strengths} />
                 <List title="Improve" items={evaluation.weaknesses} />
               </div>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {Object.entries(evaluation.categoryScores).map(([name, score]) => (
+                  <div className="rounded-md border border-white/10 bg-background/35 p-3" key={name}>
+                    <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                      {formatCategory(name)}
+                    </p>
+                    <p className="mt-2 text-2xl font-semibold text-foreground">{score}</p>
+                  </div>
+                ))}
+              </div>
               <div className="mt-4 rounded-md border border-white/10 bg-background/50 p-4">
                 <p className="text-sm font-medium text-foreground">Improved response</p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {evaluation.improvedResponse}
+                </p>
+              </div>
+              <div className="mt-4 rounded-md border border-accent/20 bg-accent/[0.07] p-4">
+                <p className="text-sm font-medium text-foreground">Next recruiter pushback</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {evaluation.nextRecruiterMessage}
                 </p>
               </div>
             </motion.div>
@@ -185,3 +214,6 @@ function List({ title, items }: { title: string; items: string[] }) {
   );
 }
 
+function formatCategory(value: string) {
+  return value.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase());
+}

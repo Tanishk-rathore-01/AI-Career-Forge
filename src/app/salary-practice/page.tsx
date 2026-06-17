@@ -1,5 +1,6 @@
-﻿import { AppShell } from "@/components/layout/app-shell";
+import { AppShell } from "@/components/layout/app-shell";
 import { SalarySimulator } from "@/components/salary/salary-simulator";
+import { PageHeader } from "@/components/ui/page-header";
 import { requireUser } from "@/lib/auth/require-user";
 
 export default async function SalaryPracticePage() {
@@ -7,18 +8,12 @@ export default async function SalaryPracticePage() {
 
   return (
     <AppShell>
-      <div className="mb-8 max-w-3xl">
-        <p className="text-sm uppercase tracking-[0.2em] text-primary">Salary simulator</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-normal text-foreground">
-          Negotiate with confidence, not pressure.
-        </h1>
-        <p className="mt-4 text-muted-foreground">
-          Practice expected salary, HR pushback, value justification, flexibility,
-          and professional tone for India or international roles.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Salary simulator"
+        title="Negotiate with confidence, not pressure."
+        description="Practice expected salary, HR pushback, value justification, flexibility, and professional tone for India or international roles."
+      />
       <SalarySimulator />
     </AppShell>
   );
 }
-

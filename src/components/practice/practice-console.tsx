@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Loader2, RotateCcw, Send } from "lucide-react";
-import Link from "next/link";
+import { ArrowRight, CheckCircle2, Loader2, RotateCcw, Send } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,8 @@ type Evaluation = {
   readinessLevel: string;
   estimatedSelectionChance: number;
   nextPracticeStep: string;
+  sessionId?: string;
+  savedEvaluationId?: string;
 };
 
 type Question = {
@@ -51,6 +53,7 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
   const [answer, setAnswer] = useState("");
   const [question, setQuestion] = useState<Question | null>(initialQuestion);
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +80,7 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
           mode,
           difficulty: "beginner",
           marketFocus,
-          previousQuestions: []
+          previousQuestions: question ? [question.question] : []
         })
       });
 
@@ -108,17 +111,22 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
           mode,
           marketFocus,
           question: question.question,
-          answer
+          answer,
+          sessionId: demo ? undefined : sessionId ?? undefined
         })
       });
 
-      const payload = await response.json();
+      const payload = (await response.json()) as Evaluation & { error?: string };
 
       if (!response.ok) {
         throw new Error(payload.error ?? "Unable to evaluate answer.");
       }
 
-      setEvaluation(payload as Evaluation);
+      setEvaluation(payload);
+
+      if (!demo && payload.sessionId) {
+        setSessionId(payload.sessionId);
+      }
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unable to evaluate answer.");
     } finally {
@@ -126,21 +134,30 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
     }
   }
 
+  function startNewSession() {
+    setSessionId(null);
+    setEvaluation(null);
+    setAnswer("");
+    setQuestion(initialQuestion);
+    setError(null);
+  }
+
   return (
-    <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
+    <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
       <Card>
         <CardContent className="p-5">
           <div className="flex flex-wrap gap-2">
             <Badge>{demo ? "Free demo" : "Practice room"}</Badge>
             {selectedRegion && <Badge>{selectedRegion.label}</Badge>}
             <Badge>Text-first MVP</Badge>
+            {sessionId && !demo && <Badge className="border-primary/30 text-primary">Saved</Badge>}
           </div>
 
           <div className="mt-6 grid gap-4">
             <label className="text-sm font-medium text-foreground">
               Target role
               <input
-                className="mt-2 h-11 w-full rounded-md border border-white/12 bg-white/8 px-3 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="field mt-2 px-3 text-sm"
                 value={targetRole}
                 onChange={(event) => setTargetRole(event.target.value)}
               />
@@ -148,7 +165,7 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
             <label className="text-sm font-medium text-foreground">
               Experience level
               <select
-                className="mt-2 h-11 w-full rounded-md border border-white/12 bg-white/8 px-3 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="field mt-2 px-3 text-sm"
                 value={experienceLevel}
                 onChange={(event) => setExperienceLevel(event.target.value)}
               >
@@ -161,7 +178,7 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
             <label className="text-sm font-medium text-foreground">
               Interview mode
               <select
-                className="mt-2 h-11 w-full rounded-md border border-white/12 bg-white/8 px-3 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="field mt-2 px-3 text-sm"
                 value={mode}
                 onChange={(event) => setMode(event.target.value)}
               >
@@ -175,7 +192,7 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
             <label className="text-sm font-medium text-foreground">
               Region context
               <select
-                className="mt-2 h-11 w-full rounded-md border border-white/12 bg-white/8 px-3 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="field mt-2 px-3 text-sm"
                 value={marketFocus}
                 onChange={(event) => setMarketFocus(event.target.value)}
               >
@@ -188,28 +205,48 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
             </label>
           </div>
 
-          <Button className="mt-5 w-full" onClick={loadQuestion} variant="secondary">
-            {isLoadingQuestion ? <Loader2 className="animate-spin" size={16} /> : <RotateCcw size={16} />}
-            Generate question
-          </Button>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <Button onClick={loadQuestion} variant="secondary">
+              {isLoadingQuestion ? (
+                <Loader2 className="animate-spin" size={16} />
+              ) : (
+                <RotateCcw size={16} />
+              )}
+              Generate question
+            </Button>
+            {!demo && (
+              <Button onClick={startNewSession} type="button" variant="ghost">
+                New session
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardContent className="p-5">
-          <div className="min-h-[116px] rounded-lg border border-white/10 bg-white/[0.04] p-5">
+          <div className="min-h-[126px] rounded-lg border border-white/10 bg-white/[0.04] p-5">
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
               PrepPilot asks
             </p>
             {isLoadingQuestion ? (
-              <p className="mt-4 text-sm text-muted-foreground">Preparing a focused question...</p>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Preparing a focused question...
+              </p>
             ) : (
               <h2 className="mt-4 text-xl font-semibold leading-8 text-foreground">
                 {question?.question ?? "Generate a question to begin."}
               </h2>
             )}
             {question && (
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">{question.intent}</p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+                <p className="text-sm leading-6 text-muted-foreground">{question.intent}</p>
+                <div className="flex flex-wrap gap-2">
+                  {question.evaluationFocus.slice(0, 3).map((focus) => (
+                    <Badge key={focus}>{focus}</Badge>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
 
@@ -245,13 +282,21 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
                 </Link>
               </Button>
             )}
+            {!demo && sessionId && (
+              <Button asChild variant="secondary">
+                <Link href={`/sessions/${sessionId}`}>
+                  View saved session
+                  <ArrowRight size={16} />
+                </Link>
+              </Button>
+            )}
           </div>
 
           {evaluation && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 rounded-lg border border-primary/25 bg-primary/10 p-5"
+              className="mt-6 rounded-lg border border-primary/25 bg-primary/[0.08] p-5"
             >
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
@@ -261,7 +306,7 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
                   </h3>
                 </div>
                 <div className="text-right">
-                  <p className="text-5xl font-semibold text-primary drop-shadow-[0_0_18px_rgba(42,157,143,0.45)]">
+                  <p className="text-5xl font-semibold text-primary">
                     {evaluation.overallScore}
                   </p>
                   <p className="text-xs text-muted-foreground">overall score</p>
@@ -273,8 +318,22 @@ export function PracticeConsole({ demo = false }: PracticeConsoleProps) {
                 <FeedbackList title="Improve" items={evaluation.weaknesses} />
               </div>
 
+              <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                {Object.entries(evaluation.categoryScores).map(([name, score]) => (
+                  <div className="rounded-md border border-white/10 bg-background/35 p-3" key={name}>
+                    <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                      {formatCategory(name)}
+                    </p>
+                    <p className="mt-2 text-2xl font-semibold text-foreground">{score}</p>
+                  </div>
+                ))}
+              </div>
+
               <div className="mt-5 rounded-md border border-white/10 bg-background/50 p-4">
-                <p className="text-sm font-medium text-foreground">Improved answer direction</p>
+                <p className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <CheckCircle2 className="text-primary" size={17} />
+                  Improved answer direction
+                </p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {evaluation.improvedAnswer}
                 </p>
@@ -304,3 +363,6 @@ function FeedbackList({ title, items }: { title: string; items: string[] }) {
   );
 }
 
+function formatCategory(value: string) {
+  return value.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase());
+}
