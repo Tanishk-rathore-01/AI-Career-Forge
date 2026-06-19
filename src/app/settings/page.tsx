@@ -98,7 +98,11 @@ export default async function SettingsPage() {
                   )}
                 </div>
                 <p className="mt-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                  {item.configured ? "Configured" : "Missing"}
+                  {item.configured
+                    ? "Configured"
+                    : item.required
+                      ? "Missing"
+                      : "Optional"}
                 </p>
               </div>
             ))}
