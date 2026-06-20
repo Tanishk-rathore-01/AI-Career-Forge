@@ -89,10 +89,12 @@ model User {
   interviews     InterviewSession[]
   evaluations    AnswerEvaluation[]
   resumeMatches  ResumeMatch[]
-  weeklyReports  WeeklyReport[]
-  certificates   ReadinessCertificate[]
   usageEvents    UsageEvent[]
   streak          UserStreak?
+
+  // Commented out until Phase 10 features are implemented:
+  // weeklyReports  WeeklyReport[]
+  // certificates   ReadinessCertificate[]
 }
 
 model Account {
@@ -235,35 +237,36 @@ model ResumeMatch {
   @@index([userId, createdAt])
 }
 
-model WeeklyReport {
-  id                String   @id @default(cuid())
-  userId            String
-  weekStart         DateTime
-  averageScore      Int
-  readinessLevel    ReadinessLevel
-  strongestAreas    String[]
-  weakestAreas      String[]
-  recommendedActions String[]
-  createdAt         DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, weekStart])
-}
-
-model ReadinessCertificate {
-  id             String         @id @default(cuid())
-  userId         String
-  certificateNo  String         @unique
-  targetRole     String
-  readinessScore Int
-  readinessLevel ReadinessLevel
-  issuedAt       DateTime       @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, issuedAt])
-}
+// Future Phase 10 features - uncomment when implementing weekly reports and certificates
+// model WeeklyReport {
+//   id                String   @id @default(cuid())
+//   userId            String
+//   weekStart         DateTime
+//   averageScore      Int
+//   readinessLevel    ReadinessLevel
+//   strongestAreas    String[]
+//   weakestAreas      String[]
+//   recommendedActions String[]
+//   createdAt         DateTime @default(now())
+//
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+//
+//   @@unique([userId, weekStart])
+// }
+//
+// model ReadinessCertificate {
+//   id             String         @id @default(cuid())
+//   userId         String
+//   certificateNo  String         @unique
+//   targetRole     String
+//   readinessScore Int
+//   readinessLevel ReadinessLevel
+//   issuedAt       DateTime       @default(now())
+//
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+//
+//   @@index([userId, issuedAt])
+// }
 
 model UserStreak {
   id              String   @id @default(cuid())
