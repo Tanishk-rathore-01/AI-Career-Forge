@@ -35,12 +35,12 @@ export async function POST(request: Request) {
     const evaluation = await evaluateInterviewAnswer(body);
 
     // Create a demo session if one doesn't exist
-    const demoDemoId = demoId || `demo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const sessionDemoId = demoId || `demo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
     if (!demoId) {
       await prisma.interviewSession.create({
         data: {
-          demoId: demoDemoId,
+          demoId: sessionDemoId,
           mode: body.mode || "HR",
           difficulty: body.difficulty || "BEGINNER",
           targetRole: body.targetRole || "General",
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     // Log usage event with IP address
     await prisma.usageEvent.create({
       data: {
-        demoId: demoDemoId,
+        demoId: sessionDemoId,
         eventType: "DEMO_EVALUATION",
         metadata: {
           ipAddress: clientIp,

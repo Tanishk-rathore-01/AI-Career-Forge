@@ -117,9 +117,10 @@ export const tests = {
   },
 
   "fallbackQuestion: should return default question for unknown mode": () => {
+    // @ts-expect-error - Testing unknown mode behavior intentionally
     const result = fallbackQuestion({
       targetRole: "QA Engineer",
-      mode: "unknown_mode" as any,
+      mode: "unknown_mode",
       difficulty: "beginner"
     });
 
