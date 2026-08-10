@@ -1,29 +1,78 @@
-# dependencies
-/node_modules
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# next
-/.next
-/out
-*.tsbuildinfo
+# Virtual environments
+.venv
+venv/
+ENV/
+env/
 
-# production
-/build
-
-# misc
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
-*.pem
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
 
-# local env files
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Environment variables (never commit secrets!)
 .env
-.env*.local
+.env.local
+.env.*.local
+!.env.backend  # Keep backend template
 
-# prisma
-prisma/dev.db
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
-.vercel
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+.agents/
+node_modules/  # Old Next.js folder (if it returns)
+.next/  # Old Next.js build (if it returns)
