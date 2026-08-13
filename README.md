@@ -20,6 +20,10 @@ AI-Career-Forge provides a Python FastAPI backend designed for production deploy
 
 ## Quick Start
 
+Note: This project uses Python 3.11 in production (runtime.txt).
+
+
+
 ### Local Development
 
 1. Clone the repository:
